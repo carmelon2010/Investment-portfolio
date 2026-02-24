@@ -1,14 +1,14 @@
 package com.example.portfolio;
 
 public class Account {
-    private final String name;
+    private final User user;
 
-    public Account(String name) {
-        this.name = name;
+    public Account(User user) {
+        this.user = user;
     }
 
     public String getName() {
-        return name;
+        return this.user.getUsername();
     }
 }
 
