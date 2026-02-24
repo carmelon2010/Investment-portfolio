@@ -1,5 +1,6 @@
 package com.example.portfolio;
 
+<<<<<<< HEAD
 // Canonical Account moved to src/com/example/portfolio/Account.java
 
 import java.util.*;
@@ -14,6 +15,17 @@ public final class Account {
 
     public String getId() {
         return id;
+=======
+public class Account {
+    private final User user;
+
+    public Account(User user) {
+        this.user = user;
+    }
+
+    public String getName() {
+        return this.user.getUsername();
+>>>>>>> a926a3a858cd77abbe06dc10637293053efc4ad4
     }
 
     public Collection<Position> getPositions() {
