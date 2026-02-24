@@ -1,12 +1,3 @@
-package src;
+package com.example.portfolio;
 
-public class Stock {
-    
-    private String stockSymbol;
-
-
-
-    public float getCurrentPrice() {
-        return api.getCurrentPrice(//stockSymbol);
-    }
-}
+// Canonical Stock moved to src/com/example/portfolio/Stock.java

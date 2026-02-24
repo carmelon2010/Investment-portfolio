@@ -1,7 +1,3 @@
-package src;
+package com.example.portfolio;
 
-public final class Portfolio {
-  private final List<Account> accounts = new ArrayList<>();
-  public void addAccount(Account a) { accounts.add(a); }
-  public List<Account> accounts() { return Collections.unmodifiableList(accounts); }
-}
+// Canonical Portfolio moved to src/com/example/portfolio/Portfolio.java
