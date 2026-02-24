@@ -4,25 +4,25 @@ package com.example.portfolio;
 
 import java.util.*;
 
-public final class Account {
+public final class Account{
 
     private String Exchange;
-    private final String id;                   
+    private final User user;
     private final Map<String, Position> positions = new HashMap<>();
 
-    public Account(String id) {
-        this.id = Objects.requireNonNull(id);
+    public Account(User user) {
+        this.user = Objects.requireNonNull(user);
     }
 
     public String getExchange() {
         return Exchange;
     }
 
-    public String getId() {
-        return id;
+    public int getId() {
+        return this.user.getId();
     }
 
-    public Collection<Position> getPositions() {
+    private Collection<Position> getPositions() {
         return Collections.unmodifiableCollection(positions.values());
     }
 
