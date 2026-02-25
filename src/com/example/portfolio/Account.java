@@ -2,22 +2,30 @@ package com.example.portfolio;
 
 import java.util.*;
 
-public final class Account{
+public final class Account {
 
-    private String Exchange;
-    private final User user;
     private final Map<String, Position> positions = new HashMap<>();
+    private final AccountProvider provider;
+    private final String customProviderName;
 
-    public Account(User user) {
-        this.user = Objects.requireNonNull(user);
+    public Account(AccountProvider provider) {
+        this(provider, null);
     }
 
-    public String getExchange() {
-        return Exchange;
+    public Account(AccountProvider provider, String customProviderName) {
+        this.provider = Objects.requireNonNull(provider, "provider must not be null");
+        this.customProviderName = customProviderName;
     }
 
-    public int getUserId() {
-        return this.user.getId();
+    public AccountProvider getProvider() {
+        return provider;
+    }
+
+    public String getProviderName() {
+        if (provider == AccountProvider.OTHER && customProviderName != null) {
+            return customProviderName;
+        }
+        return provider.name();
     }
 
     private Collection<Position> getPositions() {
