@@ -1,8 +1,8 @@
 package com.example.portfolio;
 
 public class ApiHandler {
-    public static void main(String[] args) {
-        Stock s = new Stock("AAPL", 170.0f);
+    static void main(String[] args) {
+        Stock s = Stock.getInstance("AAPL", 170.0f);
         Position p = new Position(150.0f, 10, s);
 
         System.out.println("Got position for " + s.getSymbol());
