@@ -1,7 +1,5 @@
 package com.example.portfolio;
 
-// Canonical Account moved to src/com/example/portfolio/Account.java
-
 import java.util.*;
 
 public final class Account{
@@ -18,7 +16,7 @@ public final class Account{
         return Exchange;
     }
 
-    public int getId() {
+    public int getUserId() {
         return this.user.getId();
     }
 
@@ -32,7 +30,7 @@ public final class Account{
 
     public void addOrUpdatePosition(Position p) {
         Objects.requireNonNull(p);
-        String symbol = p.getStock().getSymbol();
+        String symbol = p.getSymbol();
         positions.put(symbol, p);
     }
 
