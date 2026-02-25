@@ -1,12 +1,16 @@
 package com.example.portfolio;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class Portfolio {
-    private final List<Account> accounts = new ArrayList<>();
-    public void addAccount(Account a) { accounts.add(a); }
-    public List<Account> accounts() { return Collections.unmodifiableList(accounts); }
+    private final Set<Account> accounts = new HashSet<>();
+
+    public void addAccount(Account a) {
+        accounts.add(a);
+    }
+
+    public Set<Account> getAccounts() {
+        return Set.copyOf(accounts);
+    }
 }
 
