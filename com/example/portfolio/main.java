@@ -2,6 +2,9 @@ package com.example.portfolio;
 
 public class main {
     public static void main(String[] args) {
+
+        Logger.log(LogLevel.INFO, "Starting portfolio tests...");
+        
         boolean allPassed = PortfolioTests.runAll();
 
         System.out.println();
@@ -10,5 +13,6 @@ public class main {
         } else {
             System.out.println("SOME TESTS FAILED");
         }
+
     }
 }
