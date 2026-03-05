@@ -12,7 +12,7 @@ public final class Logger {
 
     private static String fileName;
 
-    private static final String logDirectory = "Investment-portfolio\\com\\example\\portfolio\\logs";
+    private static final String logDirectory = "com\\example\\portfolio\\logs";
 
     public static Logger getInstance() {
         if (instance == null) {
@@ -36,7 +36,7 @@ public final class Logger {
                 fileName = "log_fallback.log";
             }
 
-            File file = new File(dir, fileName);
+            File file = new File(logDirectory, fileName);
             System.out.println("Creating log file: " + file.getAbsolutePath());
             file.createNewFile();
 
