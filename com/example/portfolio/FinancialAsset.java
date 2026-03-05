@@ -51,27 +51,32 @@ public abstract class FinancialAsset {
             System.out.println("Response body: " + response.body());
 
             if (response.statusCode() != 200) {
+                System.out.println("Failed to fetch price for " + symbol + ". Status code: " + response.statusCode());
                 return;
             }
 
             String body = response.body();
             if (body == null || body.isBlank()) {
+                System.out.println("Failed to fetch price for " + symbol + ". Response body is empty.");
                 return;
             }
 
             int cIndex = body.indexOf("\"c\":");
             if (cIndex == -1) {
+                System.out.println("Failed to fetch price for " + symbol + ". Current price not found in response.");
                 return;
             }
 
             String afterC = body.substring(cIndex + 4).trim();
             int commaIndex = afterC.indexOf(",");
             if (commaIndex == -1) {
+                System.out.println("Failed to fetch price for " + symbol + ". Current price format is unexpected.");
                 return;
             }
 
             String currentPriceText = afterC.substring(0, commaIndex).trim();
             if (currentPriceText.isEmpty() || currentPriceText.equals("null")) {
+                System.out.println("Failed to fetch price for " + symbol + ". Current price is empty or null.");
                 return;
             }
 
