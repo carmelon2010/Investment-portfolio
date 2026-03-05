@@ -12,8 +12,14 @@ public final class LogFileNamer {
     private LogFileNamer() {}
 
     public static String initFileName(String prefix) {
-        String safePrefix = (prefix == null || prefix.isBlank()) ? "log" : prefix.trim();
-        fileName = safePrefix + "_" + LocalDateTime.now().format(TS) + ".log";
-        return fileName;
+        try {
+            String safePrefix = (prefix == null || prefix.isBlank()) ? "log" : prefix.trim();
+            fileName = safePrefix + "_" + LocalDateTime.now().format(TS) + ".log";
+            return fileName;
+        } catch (Exception e) {
+            fileName = "log_fallback.log";
+            Logger.log(LogLevel.ERROR, "LogFileNamer.initFileName failed, using fallback. err=" + e.getMessage());
+            return fileName;
+        }
     }
 }

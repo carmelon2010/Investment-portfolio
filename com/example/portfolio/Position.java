@@ -6,15 +6,22 @@ public class Position {
     private final FinancialAsset asset;
 
     public Position(float originalPrice, int quantity, FinancialAsset asset) {
-        if (asset == null) {
-            throw new IllegalArgumentException("asset must not be null");
+        try {
+            if (asset == null) {
+                Logger.log(LogLevel.ERROR, "Position constructor: asset is null");
+                throw new IllegalArgumentException("asset must not be null");
+            }
+            if (!Float.isFinite(originalPrice)) {
+                Logger.log(LogLevel.ERROR, "Position constructor: originalPrice is not finite for symbol=" + safeSymbol(asset) + " value=" + originalPrice);
+                throw new IllegalArgumentException("originalPrice must be a finite number");
+            }
+            this.originalPrice = originalPrice;
+            this.quantity = quantity;
+            this.asset = asset;
+        } catch (Exception e) {
+            Logger.log(LogLevel.CRITICAL, "Failed to create Position. qty=" + quantity + " originalPrice=" + originalPrice);
+            throw e;
         }
-        if (!Float.isFinite(originalPrice)) {
-            throw new IllegalArgumentException("originalPrice must be a finite number");
-        }
-        this.originalPrice = originalPrice;
-        this.quantity = quantity;
-        this.asset = asset;
     }
 
     public float getOriginalPrice() {
@@ -30,15 +37,26 @@ public class Position {
     }
 
     public float getCurrentAssetPrice() {
-        float current = asset.getCurrentPrice();
-        if (!Float.isFinite(current)) {
-            throw new IllegalStateException("Current asset price is not finite for symbol: " + getSymbol());
+        try {
+            float current = asset.getCurrentPrice();
+            if (!Float.isFinite(current)) {
+                Logger.log(LogLevel.ERROR, "Current asset price is not finite for symbol=" + getSymbol() + " price=" + current);
+                throw new IllegalStateException("Current asset price is not finite for symbol: " + getSymbol());
+            }
+            return current;
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getCurrentAssetPrice failed for symbol=" + safeSymbol(asset));
+            throw e;
         }
-        return current;
     }
 
     public String getSymbol() {
-        return asset.getSymbol();
+        try {
+            return asset.getSymbol();
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getSymbol failed in Position");
+            throw e;
+        }
     }
 
     public boolean isLong() {
@@ -50,33 +68,66 @@ public class Position {
     }
 
     public float getTotalValue() {
-        if (quantity == 0) return 0.0f;
-        return quantity * getCurrentAssetPrice();
+        try {
+            if (quantity == 0) return 0.0f;
+            return quantity * getCurrentAssetPrice();
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getTotalValue failed for symbol=" + safeSymbol(asset) + " qty=" + quantity);
+            throw e;
+        }
     }
 
     public float getCostBasis() {
-        if (quantity == 0) return 0.0f;
-        return quantity * originalPrice;
+        try {
+            if (quantity == 0) return 0.0f;
+            return quantity * originalPrice;
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getCostBasis failed for symbol=" + safeSymbol(asset) + " qty=" + quantity);
+            throw e;
+        }
     }
 
     public float getProfit() {
-        if (quantity == 0) return 0.0f;
-        return quantity * (getCurrentAssetPrice() - originalPrice);
+        try {
+            if (quantity == 0) return 0.0f;
+            return quantity * (getCurrentAssetPrice() - originalPrice);
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getProfit failed for symbol=" + safeSymbol(asset) + " qty=" + quantity);
+            throw e;
+        }
     }
 
     public float getProfitPercentage() {
-        if (quantity == 0) return 0.0f;
-        float denom = Math.abs(getCostBasis());
-        if (!Float.isFinite(denom) || denom == 0.0f) return 0.0f;
-        return (getProfit() / denom) * 100.0f;
+        try {
+            if (quantity == 0) return 0.0f;
+            float denom = Math.abs(getCostBasis());
+            if (!Float.isFinite(denom) || denom == 0.0f) return 0.0f;
+            return (getProfit() / denom) * 100.0f;
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "getProfitPercentage failed for symbol=" + safeSymbol(asset) + " qty=" + quantity);
+            throw e;
+        }
     }
 
     @Override
     public String toString() {
-        return "Position{" +
-                "symbol='" + getSymbol() + '\'' +
-                ", quantity=" + quantity +
-                ", originalPrice=" + originalPrice +
-                '}';
+        try {
+            return "Position{" +
+                    "symbol='" + getSymbol() + '\'' +
+                    ", quantity=" + quantity +
+                    ", originalPrice=" + originalPrice +
+                    '}';
+        } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "Position.toString failed");
+            return "Position{<toString failed>}";
+        }
+    }
+
+    private static String safeSymbol(FinancialAsset a) {
+        try {
+            return a == null ? "null" : a.getSymbol();
+        } catch (Exception e) {
+            return "<symbol?>";
+        }
     }
 }

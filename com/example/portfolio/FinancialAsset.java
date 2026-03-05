@@ -13,6 +13,7 @@ public abstract class FinancialAsset {
 
     protected FinancialAsset(String symbol, float currentPrice) {
         if (symbol == null || symbol.isBlank()) {
+            Logger.log(LogLevel.ERROR, "FinancialAsset constructor: symbol is null/blank");
             throw new IllegalArgumentException("symbol must not be blank");
         }
         this.symbol = symbol.trim().toUpperCase();
@@ -80,10 +81,18 @@ public abstract class FinancialAsset {
                 return;
             }
 
-            currentPrice = Float.parseFloat(currentPriceText);
+            float parsed = Float.parseFloat(currentPriceText);
+            if (!Float.isFinite(parsed) || parsed < 0f) {
+                Logger.log(LogLevel.WARNING, "Failed to fetch price for " + symbol + ". Parsed price is invalid: " + parsed);
+                return;
+            }
+
+            currentPrice = parsed;
+            Logger.log(LogLevel.INFO, "Updated price for " + symbol + " to " + currentPrice);
 
         } catch (Exception e) {
+            Logger.log(LogLevel.ERROR, "Exception while refreshing price for " + symbol + ": " + e.getMessage());
             e.printStackTrace();
         }
-}
+    }
 }
