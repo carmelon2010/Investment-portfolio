@@ -35,6 +35,7 @@ public final class Logger {
 
 
     public static void log(LogLevel level, String message) {
+        String caller = getCaller();
         if (instance == null) {
             instance = new Logger();
         }
@@ -43,7 +44,7 @@ public final class Logger {
             File file = new File(logDirectory, instance.fileName);
             Writer output = new BufferedWriter(new FileWriter(file, true));
 
-            String logEntry = String.format("%s [%s] %s: %s%n", LocalDateTime.now(), level, getCaller(), message);
+            String logEntry = String.format("%s [%s] %s: %s%n", LocalDateTime.now(), level, caller, message);
             output.append(logEntry);
             output.close();
         } catch (Exception e) {
@@ -54,7 +55,7 @@ public final class Logger {
 
     public static String getCaller() {
     return StackWalker.getInstance()
-        .walk(s -> s.skip(1).findFirst()
+        .walk(s -> s.skip(2).findFirst()
         .map(f -> f.getClassName() + "." + f.getMethodName())
         .orElse("unknown"));
     }
