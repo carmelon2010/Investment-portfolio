@@ -12,6 +12,8 @@ public final class Logger {
 
     private static String fileName;
 
+    private static final String logDirectory = "Investment-portfolio\\com\\example\\portfolio\\logs";
+
     public static Logger getInstance() {
         if (instance == null) {
             instance = new Logger();
@@ -20,9 +22,10 @@ public final class Logger {
     }
 
     private Logger() {
-        fileName = "log" + LocalDateTime.now().toString().replace(":", "-") + ".txt";
+        fileName = "log" + LocalDateTime.now().toString().replace(":", "-") + ".log";
         try {
-            File file = new File("logs/" + fileName);
+            File file = new File(logDirectory, fileName);
+            System.out.println("Creating log file: " + file.getAbsolutePath());
             file.createNewFile();
         } catch (IOException e) {
             System.out.println("An error occurred.");
@@ -32,9 +35,14 @@ public final class Logger {
 
 
     public static void log(LogLevel level, String message) {
+        if (instance == null) {
+            instance = new Logger();
+        }
         try{
-            Writer output;
-            output = new BufferedWriter(new FileWriter("logs/" + fileName, true));
+            
+            File file = new File(logDirectory, instance.fileName);
+            Writer output = new BufferedWriter(new FileWriter(file, true));
+
             String logEntry = String.format("%s [%s] %s: %s%n", LocalDateTime.now(), level, getCaller(), message);
             output.append(logEntry);
             output.close();
